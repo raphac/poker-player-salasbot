@@ -35,13 +35,13 @@ namespace Nancy.Simple
             var isRaiseOptionAvailable = CanRaise(root);
             if (playHand == CardValuationType.Risky && isRaiseOptionAvailable)
             {
-                var factor = RandomProvider.Next(1, 4);
+                var factor = RandomProvider.Next(5, 10);
                 return Raise(root.MinimumRaise, factor);
             }
     
             if (playHand == CardValuationType.Recommended)
             {
-                var factor = RandomProvider.Next(3, 6);
+                var factor = RandomProvider.Next(10, 20);
                 return Raise(root.MinimumRaise, factor);
             }
     
