@@ -16,7 +16,8 @@ namespace Nancy.Simple
 				var cardAnalyserService = new CardAnalyzerService();
 				var betValueService = new BetValueService();
 				//TODO: Use this method to return the value You want to bet
-				if (cardAnalyserService.ShouldBet(root.Players[root.InAction].HoleCards, root.CommunityCards))
+				if (cardAnalyserService.ShouldBet(root.Players[root.InAction].HoleCards, root.CommunityCards)
+				    || root.Round % 2 == 0)
 				{
 					return betValueService.GetBetValue(root);
 				}
