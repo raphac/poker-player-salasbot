@@ -39,7 +39,7 @@ namespace Nancy.Simple
                 return Raise(root.MinimumRaise, factor);
             }
     
-            if (playHand == CardValuationType.Recommended && isRaiseOptionAvailable)
+            if (playHand == CardValuationType.Recommended)
             {
                 var factor = RandomProvider.Next(3, 6);
                 return Raise(root.MinimumRaise, factor);
