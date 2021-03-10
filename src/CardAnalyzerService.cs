@@ -127,7 +127,12 @@ namespace Nancy.Simple
                     continue;
                 }
 
-                if (currentRank - 1 == card)
+                if (card == currentRank)
+                {
+                    continue;
+                }
+
+                if (card == currentRank - 1)
                 {
                     count++;
                 }
