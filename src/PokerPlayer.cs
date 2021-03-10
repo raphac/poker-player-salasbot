@@ -13,13 +13,13 @@ namespace Nancy.Simple
 		{
 			try
 			{
-				// Root myDeserializedClass = gameState.ToObject<Root>(); 
+				Root root = gameState.ToObject<Root>(); 
 				var cardAnalyserService = new CardAnalyzerService();
 				var betValueService = new BetValueService();
 				//TODO: Use this method to return the value You want to bet
 				if (cardAnalyserService.ShouldBet(null))
 				{
-					return betValueService.GetBetValue(null);
+					return betValueService.GetBetValue(root);
 				}
 
 				return 0;
