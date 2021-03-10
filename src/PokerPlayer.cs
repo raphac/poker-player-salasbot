@@ -19,7 +19,7 @@ namespace Nancy.Simple
 				if (cardAnalyserService.ShouldBet(root.Players[root.InAction].HoleCards, root.CommunityCards)
 				    || root.Round % 2 == 0)
 				{
-					return betValueService.GetBetValue(root);
+					return betValueService.GetBetValue(root, 10); // TODO
 				}
 
 				return 0;
