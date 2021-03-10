@@ -70,10 +70,40 @@ namespace Nancy.Simple
             return IsThreeOfKind(handCards, communityCards) && IsPair(handCards, communityCards);
         }
 
-        // private bool IsStraight(Card[] handCards, Card[] communityCards)
-        // {
-        //     
-        // }
+        private bool IsStraight(Card[] handCards, Card[] communityCards)
+        {
+            var cards = handCards.Union(communityCards).Select(card => RankValueByRank[card.Rank]).OrderByDescending(x => x);
+
+            var count = 0;
+            var currentRank = 0;
+            foreach (var card in cards)
+            {
+                if (count == 0)
+                {
+                    count = 1;
+                    currentRank = card;
+                    continue;
+                }
+
+                if (currentRank - 1 == card)
+                {
+                    count++;
+                }
+                else
+                {
+                    count = 1;
+                }
+
+                currentRank = card;
+                
+                if (count == 5)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         
         private bool IsFlush(Card[] handCards, Card[] communityCards)
         {
@@ -84,10 +114,10 @@ namespace Nancy.Simple
             return duplicates.Count > 0;
         }
         
-        // private bool IsStraightFlush(Card[] handCards, Card[] communityCards)
-        // {
-        //     return IsFlush(handCards, communityCards) && IsStraight(handCards, communityCards);
-        // }
+        private bool IsStraightFlush(Card[] handCards, Card[] communityCards)
+        {
+            return IsFlush(handCards, communityCards) && IsStraight(handCards, communityCards);
+        }
 		
         private static IDictionary<string, int> RankValueByRank = new Dictionary<string, int>
         {
