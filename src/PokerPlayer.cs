@@ -16,11 +16,9 @@ namespace Nancy.Simple
 				var cardAnalyserService = new CardAnalyzerService();
 				var betValueService = new BetValueService();
 				
-				//TODO: Use this method to return the value You want to bet
 				var shouldBetValue = cardAnalyserService.ShouldBet(root.Players[root.InAction].HoleCards, root.CommunityCards);
 
-					// TODO: capitalize on good cards
-				return betValueService.GetBetValue(root, shouldBetValue); // TODO
+				return betValueService.GetBetValue(root, shouldBetValue);
 			}
 			catch (Exception e)
 			{
