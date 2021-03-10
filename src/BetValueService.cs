@@ -8,6 +8,11 @@ namespace Nancy.Simple
         {
             // Make a call.
             var current_player = root.Players[root.InAction];
+            if (root.CurrentBuyIn == 1000)
+            {
+                return 0;
+            }
+            
             return root.CurrentBuyIn - current_player.Bet;
         }
     }
