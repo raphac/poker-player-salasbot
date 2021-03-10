@@ -18,7 +18,7 @@ namespace Nancy.Simple
                             IsFlush(handCards, communityCards) ||
                             IsFullHouse(handCards, communityCards) ||
                             handCards.All(card => RankValueByRank[card.Rank] >= 10) &&
-                            !IsBadHand(ownFirstCard);
+                            !IsBadHand(ownFirstCard, ownSecondCard);
 
             return shouldBet;
         }
