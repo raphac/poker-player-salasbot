@@ -14,10 +14,10 @@ namespace Nancy.Simple
                 return nextBet;
             }
 
-            if (root.CurrentBuyIn > 900 && current_player.Bet < 50)
-            {
-                return 0;
-            }
+            // if (root.CurrentBuyIn > 900 && current_player.Bet < 50)
+            // {
+            //     return 0;
+            // }
 
             return nextBet;
         }
@@ -32,18 +32,18 @@ namespace Nancy.Simple
         //             return 0;
         //         }
         //
-        //         var isRaiseOptionAvailable = CanRaise();
+        //         var isRaiseOptionAvailable = CanRaise(root);
         //         if (playHand == CardValuationType.Risky && isRaiseOptionAvailable)
         //         {
         //             var factor = RandomProvider.Next(1, 4);
-        //             return RaiseOrAllIn(
+        //             return Raise(
         //                 root.MinimumRaise, root.context.CurrentMaxBet, currentPlayer.Stack, context.MoneyToCall, factor);
         //         }
         //
         //         if (playHand == CardValuationType.Recommended && isRaiseOptionAvailable)
         //         {
         //             var factor = RandomProvider.Next(3, 6);
-        //             return RaiseOrAllIn(
+        //             return Raise(
         //                 context.MinRaise, context.CurrentMaxBet, context.MoneyLeft, context.MoneyToCall, factor);
         //         }
         //
@@ -65,12 +65,14 @@ namespace Nancy.Simple
             return nextBet;
         }
 
-        private bool CanRaise()
+        private bool CanRaise(Root root)
         {
-            return true; // TODO
+            var currentPlayer = root.Players[root.InAction];
+            var nextBet = root.CurrentBuyIn - currentPlayer.Bet;
+            return nextBet <= currentPlayer.Stack;
         }
 
-        private int RaiseOrAllIn(int minRaise, int currentMaxBet, int moneyLeft, int moneyToCall, int factor)
+        private int Raise(int minRaise, int currentMaxBet, int moneyLeft, int moneyToCall, int factor)
         {
             if ((minRaise * factor) + currentMaxBet > moneyLeft)
             {
