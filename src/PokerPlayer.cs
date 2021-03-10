@@ -35,7 +35,9 @@ namespace Nancy.Simple
 	{
 		public int GetBetValue(Root root)
 		{
-			return 10;
+			// Make a call.
+			var current_player = root.players[root.in_action];
+			return root.current_buy_in - current_player.bet;
 		}
 	}
 
@@ -66,6 +68,7 @@ namespace Nancy.Simple
 	public class Root
 	{
 		public List<Player> players { get; set; }
+		public int in_action { get; set; }
 		public string tournament_id { get; set; }
 		public string game_id { get; set; }
 		public int round { get; set; }
