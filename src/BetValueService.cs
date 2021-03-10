@@ -32,8 +32,7 @@ namespace Nancy.Simple
                 return 0;
             }
     
-            var isRaiseOptionAvailable = CanRaise(root);
-            if (playHand == CardValuationType.Risky && isRaiseOptionAvailable)
+            if (playHand == CardValuationType.Risky)
             {
                 var factor = RandomProvider.Next(5, 10);
                 return Raise(root.MinimumRaise, factor);
@@ -58,13 +57,6 @@ namespace Nancy.Simple
             }
 
             return nextBet;
-        }
-
-        private bool CanRaise(Root root)
-        {
-            var currentPlayer = root.Players[root.InAction];
-            var nextBet = root.CurrentBuyIn - currentPlayer.Bet;
-            return nextBet <= currentPlayer.Stack;
         }
 
         private int Raise(int minRaise, int factor)
