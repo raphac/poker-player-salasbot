@@ -7,10 +7,6 @@ namespace Nancy.Simple
         public int GetBetValue(Root root, int shouldBetValue)
         {
             // Make a call.
-            var current_player = root.Players[root.InAction];
-            
-            var callValue = root.CurrentBuyIn - current_player.Bet;
-
             if (shouldBetValue == 0)
             {
                 return GetTurn(root, CardValuationType.Unplayable);
