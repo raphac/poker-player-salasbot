@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Nancy.Simple
@@ -51,16 +52,6 @@ namespace Nancy.Simple
 		}
 	}
 
-	public class Player
-	{
-		public string name { get; set; }
-		public int stack { get; set; }
-		public string status { get; set; }
-		public int bet { get; set; }
-		public List<Card> hole_cards { get; set; }
-		public string version { get; set; }
-		public int id { get; set; }
-	}
 	public interface ICardAnalyzerService
 	{
 		bool ShouldBet(List<Card> cards);
