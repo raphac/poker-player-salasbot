@@ -23,10 +23,10 @@ namespace Nancy.Simple
             return shouldBet;
         }
 
-        private static bool IsBadHand(Card ownFirstCard)
+        private static bool IsBadHand(Card ownFirstCard, Card ownSecondCard)
         {
-            return (RankValueByRank[ownFirstCard.Rank] == 2 && RankValueByRank[ownFirstCard.Rank] == 7) ||
-                     (RankValueByRank[ownFirstCard.Rank] == 7 && RankValueByRank[ownFirstCard.Rank] == 2);
+            return (RankValueByRank[ownFirstCard.Rank] == 2 && RankValueByRank[ownSecondCard.Rank] == 7) ||
+                     (RankValueByRank[ownFirstCard.Rank] == 7 && RankValueByRank[ownSecondCard.Rank] == 2);
         }
 
         private bool IsPair(Card[] handCards, Card[] communityCards)
