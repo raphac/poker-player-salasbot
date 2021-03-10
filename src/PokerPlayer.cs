@@ -25,6 +25,7 @@ namespace Nancy.Simple
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine(e);
 				return 12;
 			}
 		}
@@ -45,8 +46,8 @@ namespace Nancy.Simple
 		public int GetBetValue(Root root)
 		{
 			// Make a call.
-			var current_player = root.players[root.in_action];
-			return root.current_buy_in - current_player.bet;
+			var current_player = root.Players[root.InAction];
+			return root.CurrentBuyIn - current_player.Bet;
 		}
 	}
 
@@ -60,27 +61,92 @@ namespace Nancy.Simple
 		public string version { get; set; }
 		public int id { get; set; }
 	}
-
-	public class Root
+	public interface ICardAnalyzerService
 	{
-		public List<Player> players { get; set; }
-		public int in_action { get; set; }
-		public string tournament_id { get; set; }
-		public string game_id { get; set; }
-		public int round { get; set; }
-		public int bet_index { get; set; }
-		public int small_blind { get; set; }
-		public int orbits { get; set; }
-		public int dealer { get; set; }
-		public List<Card> community_cards { get; set; }
-		public int current_buy_in { get; set; }
-		public int pot { get; set; }
+		bool ShouldBet(List<Card> cards);
 	}
 
-	public class Card
+	public class CardAnalyzerService : ICardAnalyzerService
 	{
-		public string rank { get; set; }
-		public string suit { get; set; }
+		public bool ShouldBet(List<Card> cards)
+		{
+			return true;
+		}
 	}
+
+    public partial class Root
+    {
+        [JsonProperty("tournament_id")]
+        public string TournamentId { get; set; }
+
+        [JsonProperty("game_id")]
+        public string GameId { get; set; }
+
+        [JsonProperty("round")]
+        public int Round { get; set; }
+
+        [JsonProperty("bet_index")]
+        public int BetIndex { get; set; }
+
+        [JsonProperty("small_blind")]
+        public int SmallBlind { get; set; }
+
+        [JsonProperty("current_buy_in")]
+        public int CurrentBuyIn { get; set; }
+
+        [JsonProperty("pot")]
+        public int Pot { get; set; }
+
+        [JsonProperty("minimum_raise")]
+        public int MinimumRaise { get; set; }
+
+        [JsonProperty("dealer")]
+        public int Dealer { get; set; }
+
+        [JsonProperty("orbits")]
+        public int Orbits { get; set; }
+
+        [JsonProperty("in_action")]
+        public int InAction { get; set; }
+
+        [JsonProperty("players")]
+        public Player[] Players { get; set; }
+
+        [JsonProperty("community_cards")]
+        public Card[] CommunityCards { get; set; }
+    }
+
+    public partial class Card
+    {
+        [JsonProperty("rank")]
+        public string Rank { get; set; }
+
+        [JsonProperty("suit")]
+        public string Suit { get; set; }
+    }
+
+    public partial class Player
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("version")]
+        public string Version { get; set; }
+
+        [JsonProperty("stack")]
+        public int Stack { get; set; }
+
+        [JsonProperty("bet")]
+        public int Bet { get; set; }
+
+        [JsonProperty("hole_cards", NullValueHandling = NullValueHandling.Ignore)]
+        public Card[] HoleCards { get; set; }
+    }
 }
 
