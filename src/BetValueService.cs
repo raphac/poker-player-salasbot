@@ -4,7 +4,7 @@ namespace Nancy.Simple
 {
     public class BetValueService : IBetValueService
     {
-        public int GetBetValue(Root root, int goodCardsIndex)
+        public int GetBetValue(Root root, int goodCardsIndex, bool shouldBet)
         {
             // Make a call.
             var current_player = root.Players[root.InAction];
