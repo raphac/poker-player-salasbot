@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Nancy.Simple
@@ -9,15 +11,23 @@ namespace Nancy.Simple
 
 		public static int BetRequest(JObject gameState)
 		{
-			var cardAnalyserService = new CardAnalyzerService();
-			var betValueService = new BetValueService();
-			//TODO: Use this method to return the value You want to bet
-			if (cardAnalyserService.ShouldBet(null))
+			try
 			{
-				return betValueService.GetBetValue(null);
-			}
+				// Root myDeserializedClass = gameState.ToObject<Root>(); 
+				var cardAnalyserService = new CardAnalyzerService();
+				var betValueService = new BetValueService();
+				//TODO: Use this method to return the value You want to bet
+				if (cardAnalyserService.ShouldBet(null))
+				{
+					return betValueService.GetBetValue(null);
+				}
 
-			return 0;
+				return 0;
+			}
+			catch (Exception e)
+			{
+				return 12;
+			}
 		}
 
 		public static void ShowDown(JObject gameState)
