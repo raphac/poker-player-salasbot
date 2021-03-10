@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Nancy.Simple
@@ -17,7 +16,7 @@ namespace Nancy.Simple
 				var cardAnalyserService = new CardAnalyzerService();
 				var betValueService = new BetValueService();
 				//TODO: Use this method to return the value You want to bet
-				if (cardAnalyserService.ShouldBet(null))
+				if (cardAnalyserService.ShouldBet(root.players[root.in_action].hole_cards, root.community_cards))
 				{
 					return betValueService.GetBetValue(root);
 				}
@@ -51,19 +50,6 @@ namespace Nancy.Simple
 		}
 	}
 
-	public interface ICardAnalyzerService
-	{
-		bool ShouldBet(List<Card> cards);
-	}
-
-	public class CardAnalyzerService : ICardAnalyzerService
-	{
-		public bool ShouldBet(List<Card> cards)
-		{
-			return true;
-		}
-	}
-
 	public class Player
 	{
 		public string name { get; set; }
@@ -93,7 +79,7 @@ namespace Nancy.Simple
 
 	public class Card
 	{
-		public int rank { get; set; }
+		public string rank { get; set; }
 		public string suit { get; set; }
 	}
 }

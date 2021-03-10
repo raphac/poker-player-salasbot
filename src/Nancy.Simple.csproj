@@ -70,6 +70,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CardAnalyzerService.cs" />
+    <Compile Include="ICardAnalyzerService.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="App.cs" />
     <Compile Include="PokerPlayer.cs" />
