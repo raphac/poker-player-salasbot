@@ -51,10 +51,6 @@ namespace Nancy.Simple
         {
             var current_player = root.Players[root.InAction];
             var nextBet = root.CurrentBuyIn - current_player.Bet;
-            if (root.CurrentBuyIn > 900 && current_player.Bet < 50)
-            {
-                return 0;
-            }
 
             return nextBet;
         }
