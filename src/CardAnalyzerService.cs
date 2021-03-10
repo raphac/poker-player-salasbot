@@ -58,6 +58,14 @@ namespace Nancy.Simple
                 .SingleOrDefault(g => g.Count() == 2);
             if (pair != null)
             {
+                var communitCardsValue = communityCards
+                    .GroupBy(card => RankValueByRank[card.Rank]).Count(g => Enumerable.Count<Card>(g) == 2) > 0;
+
+                if (communitCardsValue)
+                {
+                    return pair.Key / 2;
+                }
+                
                 return pair.Key;
             }
             else
@@ -72,7 +80,17 @@ namespace Nancy.Simple
                 .Where(g => g.Count() == 2)
                 .Select(y => y.Key)
                 .ToList();
-            return duplicates.Count == 2 ? 2 * duplicates.Max() : 0;
+            
+            var value = duplicates.Count == 2 ? 2 * duplicates.Max() : 0;
+
+            var communityCardDuplicates = communityCards.GroupBy(card => RankValueByRank[card.Rank])
+                .Where(g => g.Count() == 2)
+                .Select(y => y.Key)
+                .ToList();
+            
+            var communityCardValue = communityCardDuplicates.Count == 2 ? 2 * duplicates.Max() : 0;
+            
+            return communityCardValue > 0 ? value / 2 : value;
         }
         
         private int ThreeOfKindValue(Card[] handCards, Card[] communityCards)
@@ -81,7 +99,17 @@ namespace Nancy.Simple
                 .Where(g => g.Count() == 3)
                 .Select(y => y.Key)
                 .ToList();
-            return duplicates.Count > 0 ? 3 * duplicates.Max() : 0;
+            
+            var value = duplicates.Count > 0 ? 3 * duplicates.Max() : 0;
+            
+            var communityDuplicates = communityCards.GroupBy(card => RankValueByRank[card.Rank])
+                .Where(g => g.Count() == 3)
+                .Select(y => y.Key)
+                .ToList();
+            
+            var communityValue = communityDuplicates.Count > 0 ? 3 * duplicates.Max() : 0;
+
+            return communityValue > 0 ? value / 2 : value;
         }
         
         private int StraightValue(Card[] handCards, Card[] communityCards)
@@ -112,7 +140,7 @@ namespace Nancy.Simple
                 
                 if (count == 5)
                 {
-                    return currentRank * 5;
+                    return currentRank * 4;
                 }
             }
 
@@ -141,13 +169,13 @@ namespace Nancy.Simple
                 .Where(g => g.Count() == 4)
                 .Select(y => y.Key)
                 .ToList();
-            return duplicates.Count > 0 ? 21 * duplicates.Max() : 0;
+            return duplicates.Count > 0 ? 5 * duplicates.Max() : 0;
         }
 
         private int StraightFlushValue(Card[] handCards, Card[] communityCards)
         {
             var intermediateValue = FlushValue(handCards, communityCards) * StraightValue(handCards, communityCards);
-            return intermediateValue > 0 ? 34 * FlushValue(handCards, communityCards) / 8 : intermediateValue;
+            return intermediateValue > 0 ? 6 * FlushValue(handCards, communityCards) / 8 : intermediateValue;
         }
 		
         private static IDictionary<string, int> RankValueByRank = new Dictionary<string, int>
