@@ -4,11 +4,11 @@ namespace Nancy.Simple
 {
     public class BetValueService : IBetValueService
     {
-        public int GetBetValue(Root root)
+        public int GetBetValue(Root root, int goodCardsIndex)
         {
             // Make a call.
             var current_player = root.Players[root.InAction];
-            if (root.CurrentBuyIn == 1000)
+            if (root.CurrentBuyIn > 900)
             {
                 return 0;
             }
