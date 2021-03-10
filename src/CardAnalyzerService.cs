@@ -54,19 +54,24 @@ namespace Nancy.Simple
 
         private int PairValue(Card[] handCards, Card[] communityCards)
         {
-            var pair = handCards.Union(communityCards).GroupBy(card => RankValueByRank[card.Rank])
-                .SingleOrDefault(g => g.Count() == 2);
-            if (pair != null)
+            var pairs = handCards.Union(communityCards)
+                .GroupBy(card => RankValueByRank[card.Rank])
+                .Where(g => g.Count() == 2)
+                .Select(g => g.Key);
+            
+            if (pairs.Count() == 1)
             {
                 var communitCardsValue = communityCards
                     .GroupBy(card => RankValueByRank[card.Rank]).Count(g => Enumerable.Count<Card>(g) == 2) > 0;
+                
+                var value = pairs.Single();
 
                 if (communitCardsValue)
                 {
-                    return pair.Key / 2;
+                    return value / 2;
                 }
                 
-                return pair.Key;
+                return value;
             }
             else
             {
