@@ -44,7 +44,12 @@ namespace Nancy.Simple
         {
             var firstRank = RankValueByRank[first.Rank];
             var secondRank = RankValueByRank[second.Rank];
-            return firstRank + secondRank;
+            if (firstRank >= 8 || secondRank >= 8)
+            {
+                return firstRank + secondRank;
+            }
+
+            return 0;
         }
 
         private int PairValue(Card[] handCards, Card[] communityCards)
