@@ -10,10 +10,11 @@ namespace Nancy.Simple
 		public static int BetRequest(JObject gameState)
 		{
 			var cardAnalyserService = new CardAnalyzerService();
+			var betValueService = new BetValueService();
 			//TODO: Use this method to return the value You want to bet
 			if (cardAnalyserService.ShouldBet(null))
 			{
-				return 8;
+				return betValueService.GetBetValue(null);
 			}
 
 			return 0;
@@ -22,6 +23,19 @@ namespace Nancy.Simple
 		public static void ShowDown(JObject gameState)
 		{
 			//TODO: Use this method to showdown
+		}
+	}
+	
+	public interface IBetValueService
+	{
+		int GetBetValue(Root root);
+	}
+	
+	public class BetValueService : IBetValueService
+	{
+		public int GetBetValue(Root root)
+		{
+			return 10;
 		}
 	}
 
