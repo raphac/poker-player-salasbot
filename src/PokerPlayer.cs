@@ -13,7 +13,7 @@ namespace Nancy.Simple
 			//TODO: Use this method to return the value You want to bet
 			if (cardAnalyserService.ShouldBet(null))
 			{
-				return 6;
+				return 8;
 			}
 
 			return 0;
