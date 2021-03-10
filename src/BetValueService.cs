@@ -1,4 +1,5 @@
-﻿using Nancy.Simple.Model;
+﻿using System.Linq;
+using Nancy.Simple.Model;
 
 namespace Nancy.Simple
 {
@@ -6,58 +7,20 @@ namespace Nancy.Simple
     {
         public int GetBetValue(Root root, int shouldBetValue)
         {
-            // Make a call.
-            if (shouldBetValue == 0)
+            if (!root.CommunityCards.Any())
             {
-                return GetTurn(root, CardValuationType.Unplayable);
-            }
-
-            if (shouldBetValue <= 20)
-            {
-                return GetTurn(root, CardValuationType.NotRecommended);
+                if (shouldBetValue > 18)
+                {
+                    return root.CurrentBuyIn - root.Players[root.InAction].Bet;
+                }
             }
             
-            if (shouldBetValue <= 75)
+            if (shouldBetValue > 45)
             {
-                return GetTurn(root, CardValuationType.Risky);
+                return 8000;
             }
-            
-            return GetTurn(root, CardValuationType.Recommended);
-        }
-        
-        public int GetTurn(Root root, CardValuationType playHand)
-        {
-            if (playHand == CardValuationType.Unplayable)
-            {
-                return 0;
-            }
-    
-            if (playHand == CardValuationType.Risky)
-            {
-                var factor = RandomProvider.Next(5, 10);
-                return Raise(root.MinimumRaise, factor);
-            }
-    
-            if (playHand == CardValuationType.Recommended)
-            {
-                var factor = RandomProvider.Next(10, 20);
-                return Raise(root.MinimumRaise, factor);
-            }
-    
-            return CheckOrCall(root);
-        }
 
-        private int CheckOrCall(Root root)
-        {
-            var current_player = root.Players[root.InAction];
-            var nextBet = root.CurrentBuyIn - current_player.Bet;
-
-            return nextBet;
-        }
-
-        private int Raise(int minRaise, int factor)
-        {
-            return minRaise * factor;
+            return 0;
         }
     }
 }

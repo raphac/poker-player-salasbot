@@ -44,7 +44,6 @@ namespace Nancy.Simple
         {
             var firstRank = RankValueByRank[first.Rank];
             var secondRank = RankValueByRank[second.Rank];
-            
             if (firstRank >= 8 || secondRank >= 8)
             {
                 return firstRank + secondRank;
