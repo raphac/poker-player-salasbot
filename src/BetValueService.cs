@@ -22,36 +22,28 @@ namespace Nancy.Simple
             return nextBet;
         }
         
-        // public int GetTurn(Root root, CardValuationType playHand)
-        // {
-        //     // if (context.RoundType == GameRoundType.PreFlop)
-        //     // {
-        //         var currentPlayer = root.Players[root.InAction];
-        //         if (playHand == CardValuationType.Unplayable)
-        //         {
-        //             return 0;
-        //         }
-        //
-        //         var isRaiseOptionAvailable = CanRaise(root);
-        //         if (playHand == CardValuationType.Risky && isRaiseOptionAvailable)
-        //         {
-        //             var factor = RandomProvider.Next(1, 4);
-        //             return Raise(
-        //                 root.MinimumRaise, root.context.CurrentMaxBet, currentPlayer.Stack, context.MoneyToCall, factor);
-        //         }
-        //
-        //         if (playHand == CardValuationType.Recommended && isRaiseOptionAvailable)
-        //         {
-        //             var factor = RandomProvider.Next(3, 6);
-        //             return Raise(
-        //                 context.MinRaise, context.CurrentMaxBet, context.MoneyLeft, context.MoneyToCall, factor);
-        //         }
-        //
-        //         return CheckOrCall(root);
-        //     // }
-        //     //
-        //     // return PlayerAction.CheckOrCall();
-        // }
+        public int GetTurn(Root root, CardValuationType playHand)
+        {
+            if (playHand == CardValuationType.Unplayable)
+            {
+                return 0;
+            }
+    
+            var isRaiseOptionAvailable = CanRaise(root);
+            if (playHand == CardValuationType.Risky && isRaiseOptionAvailable)
+            {
+                var factor = RandomProvider.Next(1, 4);
+                return Raise(root.MinimumRaise, factor);
+            }
+    
+            if (playHand == CardValuationType.Recommended && isRaiseOptionAvailable)
+            {
+                var factor = RandomProvider.Next(3, 6);
+                return Raise(root.MinimumRaise, factor);
+            }
+    
+            return CheckOrCall(root);
+        }
 
         private int CheckOrCall(Root root)
         {
@@ -72,17 +64,9 @@ namespace Nancy.Simple
             return nextBet <= currentPlayer.Stack;
         }
 
-        private int Raise(int minRaise, int currentMaxBet, int moneyLeft, int moneyToCall, int factor)
+        private int Raise(int minRaise, int factor)
         {
-            if ((minRaise * factor) + currentMaxBet > moneyLeft)
-            {
-                // All-in
-                return moneyLeft - moneyToCall;
-            }
-            else
-            {
-                return minRaise * factor;
-            }
+            return minRaise * factor;
         }
     }
 }
