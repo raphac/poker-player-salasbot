@@ -17,7 +17,7 @@ namespace Nancy.Simple
                             IsFourOfKind(handCards, communityCards) ||
                             IsFlush(handCards, communityCards) ||
                             IsFullHouse(handCards, communityCards) ||
-                            handCards.All(card => RankValueByRank[card.Rank] >= 10) &&
+                            //handCards.All(card => RankValueByRank[card.Rank] >= 10) &&
                             !IsBadHand(ownFirstCard, ownSecondCard);
 
             return shouldBet;
