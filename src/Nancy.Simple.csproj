@@ -70,10 +70,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BetValueService.cs" />
     <Compile Include="CardAnalyzerService.cs" />
+    <Compile Include="IBetValueService.cs" />
     <Compile Include="ICardAnalyzerService.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="App.cs" />
+    <Compile Include="Model\Card.cs" />
+    <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\Root.cs" />
     <Compile Include="PokerPlayer.cs" />
   </ItemGroup>
   <ItemGroup>

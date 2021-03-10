@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Nancy.Simple.Model;
 
 namespace Nancy.Simple
 {
     public interface ICardAnalyzerService
     {
-        bool ShouldBet(List<Card> handCards, List<Card> communityCards);
+        bool ShouldBet(Card[] handCards, Card[] communityCards);
     }
 }

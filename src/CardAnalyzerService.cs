@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Nancy.Simple.Model;
 
 namespace Nancy.Simple
 {
     public class CardAnalyzerService : ICardAnalyzerService
     {
-        public bool ShouldBet(List<Card> handCards, List<Card> communityCards)
+        public bool ShouldBet(Card[] handCards, Card[] communityCards)
         {
             var ownFirstCard = handCards.First();
             var ownSecondCard = handCards.Last();
 			
-            var shouldBet = RankValueByRank[ownFirstCard.rank] == RankValueByRank[ownSecondCard.rank];
-            shouldBet = ownFirstCard.suit == ownSecondCard.suit;
-			
+            var shouldBet = RankValueByRank[ownFirstCard.Rank] == RankValueByRank[ownSecondCard.Rank] ||
+                            handCards.All(card => RankValueByRank[card.Rank] >= 10) ||
+                            !((RankValueByRank[ownFirstCard.Rank] == 2 && RankValueByRank[ownFirstCard.Rank] == 7) ||
+                              (RankValueByRank[ownFirstCard.Rank] == 7 && RankValueByRank[ownFirstCard.Rank] == 2));
+            
             return shouldBet;
         }
 		
