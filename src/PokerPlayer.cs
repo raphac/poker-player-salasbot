@@ -15,15 +15,12 @@ namespace Nancy.Simple
 				Root root = gameState.ToObject<Root>(); 
 				var cardAnalyserService = new CardAnalyzerService();
 				var betValueService = new BetValueService();
+				
 				//TODO: Use this method to return the value You want to bet
-				var shouldBet = cardAnalyserService.ShouldBet(root.Players[root.InAction].HoleCards, root.CommunityCards);
-				if (shouldBet
-				    || root.Round % 2 == 0)
-				{
-					return betValueService.GetBetValue(root, 10, shouldBet); // TODO
-				}
+				var shouldBetValue = cardAnalyserService.ShouldBet(root.Players[root.InAction].HoleCards, root.CommunityCards);
 
-				return 0;
+					// TODO: capitalize on good cards
+				return betValueService.GetBetValue(root, shouldBetValue); // TODO
 			}
 			catch (Exception e)
 			{

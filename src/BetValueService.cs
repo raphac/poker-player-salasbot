@@ -4,22 +4,29 @@ namespace Nancy.Simple
 {
     public class BetValueService : IBetValueService
     {
-        public int GetBetValue(Root root, int goodCardsIndex, bool shouldBet)
+        public int GetBetValue(Root root, int shouldBetValue)
         {
             // Make a call.
             var current_player = root.Players[root.InAction];
-            var nextBet = root.CurrentBuyIn - current_player.Bet;
-            if (shouldBet)
+            
+            var callValue = root.CurrentBuyIn - current_player.Bet;
+
+            if (shouldBetValue == 0)
             {
-                return nextBet;
+                return GetTurn(root, CardValuationType.Unplayable);
             }
 
-            // if (root.CurrentBuyIn > 900 && current_player.Bet < 50)
-            // {
-            //     return 0;
-            // }
-
-            return nextBet;
+            if (shouldBetValue <= 50)
+            {
+                return GetTurn(root, CardValuationType.NotRecommended);
+            }
+            
+            if (shouldBetValue <= 150)
+            {
+                return GetTurn(root, CardValuationType.Risky);
+            }
+            
+            return GetTurn(root, CardValuationType.Recommended);
         }
         
         public int GetTurn(Root root, CardValuationType playHand)

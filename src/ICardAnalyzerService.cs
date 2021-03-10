@@ -5,6 +5,6 @@ namespace Nancy.Simple
 {
     public interface ICardAnalyzerService
     {
-        bool ShouldBet(Card[] handCards, Card[] communityCards);
+        int ShouldBet(Card[] handCards, Card[] communityCards);
     }
 }

@@ -6,71 +6,78 @@ namespace Nancy.Simple
 {
     public class CardAnalyzerService : ICardAnalyzerService
     {
-        public bool ShouldBet(Card[] handCards, Card[] communityCards)
+        public int ShouldBet(Card[] handCards, Card[] communityCards)
         {
             var ownFirstCard = handCards.First();
             var ownSecondCard = handCards.Last();
 			
-            var shouldBet = IsPair(handCards, communityCards) ||
-                            IsTwoPair(handCards, communityCards) ||
-                            IsThreeOfKind(handCards, communityCards) ||
-                            IsFourOfKind(handCards, communityCards) ||
-                            IsFlush(handCards, communityCards) ||
-                            IsFullHouse(handCards, communityCards) ||
-                            //handCards.All(card => RankValueByRank[card.Rank] >= 10) &&
-                            !IsBadHand(ownFirstCard, ownSecondCard);
+            var cardValues = new int[]
+            {
+                PairValue(handCards, communityCards),
+                TwoPairValue(handCards, communityCards),
+                ThreeOfKindValue(handCards, communityCards),
+                FourOfKindValue(handCards, communityCards),
+                FlushValue(handCards, communityCards),
+                FullHouseValue(handCards, communityCards),
+                StraightValue(handCards, communityCards),
+                StraightFlushValue(handCards, communityCards),
+                communityCards.Any() ? 0 : StartHandValue(ownFirstCard, ownSecondCard)
+            };
 
-            return shouldBet;
+            var cardValue = cardValues.Max();
+
+            if (IsBadHand(ownFirstCard, ownSecondCard))
+            {
+                cardValue = 0;
+            }
+
+            return cardValue;
         }
 
-        private static bool IsBadHand(Card ownFirstCard, Card ownSecondCard)
+        private bool IsBadHand(Card ownFirstCard, Card ownSecondCard)
         {
             return (RankValueByRank[ownFirstCard.Rank] == 2 && RankValueByRank[ownSecondCard.Rank] == 7) ||
                      (RankValueByRank[ownFirstCard.Rank] == 7 && RankValueByRank[ownSecondCard.Rank] == 2);
         }
 
-        private bool IsPair(Card[] handCards, Card[] communityCards)
+        private int StartHandValue(Card first, Card second)
+        {
+            var firstRank = RankValueByRank[first.Rank];
+            var secondRank = RankValueByRank[second.Rank];
+            if (firstRank >= 8 && secondRank >= 8)
+            {
+                return firstRank + secondRank;
+            }
+
+            return 0;
+        }
+
+        private int PairValue(Card[] handCards, Card[] communityCards)
+        {
+            var pair = handCards.Union(communityCards).GroupBy(card => RankValueByRank[card.Rank])
+                .SingleOrDefault(g => g.Count() == 2);
+            return pair?.Key ?? 0;
+        }
+        
+        private int TwoPairValue(Card[] handCards, Card[] communityCards)
         {
             var duplicates = handCards.Union(communityCards).GroupBy(card => RankValueByRank[card.Rank])
                 .Where(g => g.Count() == 2)
                 .Select(y => y.Key)
                 .ToList();
-            return duplicates.Count == 1;
+            return duplicates.Count == 2 ? 2 * duplicates.Max() : 0;
         }
         
-        private bool IsTwoPair(Card[] handCards, Card[] communityCards)
-        {
-            var duplicates = handCards.Union(communityCards).GroupBy(card => RankValueByRank[card.Rank])
-                .Where(g => g.Count() == 2)
-                .Select(y => y.Key)
-                .ToList();
-            return duplicates.Count == 2;
-        }
-        
-        private bool IsThreeOfKind(Card[] handCards, Card[] communityCards)
+        private int ThreeOfKindValue(Card[] handCards, Card[] communityCards)
         {
             var duplicates = handCards.Union(communityCards).GroupBy(card => RankValueByRank[card.Rank])
                 .Where(g => g.Count() == 3)
                 .Select(y => y.Key)
                 .ToList();
-            return duplicates.Count > 0;
+            return duplicates.Count > 0 ? 3 * duplicates.Max() : 0;
         }
         
-        private bool IsFourOfKind(Card[] handCards, Card[] communityCards)
-        {
-            var duplicates = handCards.Union(communityCards).GroupBy(card => RankValueByRank[card.Rank])
-                .Where(g => g.Count() == 4)
-                .Select(y => y.Key)
-                .ToList();
-            return duplicates.Count > 0;
-        }
-        
-        private bool IsFullHouse(Card[] handCards, Card[] communityCards)
-        {
-            return IsThreeOfKind(handCards, communityCards) && IsPair(handCards, communityCards);
-        }
-
-        private bool IsStraight(Card[] handCards, Card[] communityCards)
+        private int StraightValue(Card[] handCards, Card[] communityCards)
         {
             var cards = handCards.Union(communityCards).Select(card => RankValueByRank[card.Rank]).OrderByDescending(x => x);
 
@@ -98,25 +105,42 @@ namespace Nancy.Simple
                 
                 if (count == 5)
                 {
-                    return true;
+                    return currentRank * 5;
                 }
             }
 
-            return false;
+            return 0;
         }
         
-        private bool IsFlush(Card[] handCards, Card[] communityCards)
+        private int FlushValue(Card[] handCards, Card[] communityCards)
         {
-            var duplicates = handCards.Union(communityCards).GroupBy(card => card.Suit)
+            var cards = handCards.Union(communityCards).ToList();
+            var duplicates = cards.GroupBy(card => card.Suit)
                 .Where(g => g.Count() >= 5)
                 .Select(y => y.Key)
                 .ToList();
-            return duplicates.Count > 0;
+            return duplicates.Count > 0 ? 8 * cards.Max(c => RankValueByRank[c.Rank]) : 0;
         }
         
-        private bool IsStraightFlush(Card[] handCards, Card[] communityCards)
+        private int FullHouseValue(Card[] handCards, Card[] communityCards)
         {
-            return IsFlush(handCards, communityCards) && IsStraight(handCards, communityCards);
+            var intermediateValue = ThreeOfKindValue(handCards, communityCards) * PairValue(handCards, communityCards);
+            return intermediateValue > 0 ? 13 * ThreeOfKindValue(handCards, communityCards) / 3 : intermediateValue;
+        }
+        
+        private int FourOfKindValue(Card[] handCards, Card[] communityCards)
+        {
+            var duplicates = handCards.Union(communityCards).GroupBy(card => RankValueByRank[card.Rank])
+                .Where(g => g.Count() == 4)
+                .Select(y => y.Key)
+                .ToList();
+            return duplicates.Count > 0 ? 21 * duplicates.Max() : 0;
+        }
+
+        private int StraightFlushValue(Card[] handCards, Card[] communityCards)
+        {
+            var intermediateValue = FlushValue(handCards, communityCards) * StraightValue(handCards, communityCards);
+            return intermediateValue > 0 ? 34 * FlushValue(handCards, communityCards) / 8 : intermediateValue;
         }
 		
         private static IDictionary<string, int> RankValueByRank = new Dictionary<string, int>
