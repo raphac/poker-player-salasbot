@@ -12,12 +12,12 @@ namespace Nancy.Simple
                 return GetTurn(root, CardValuationType.Unplayable);
             }
 
-            if (shouldBetValue <= 50)
+            if (shouldBetValue <= 20)
             {
                 return GetTurn(root, CardValuationType.NotRecommended);
             }
             
-            if (shouldBetValue <= 150)
+            if (shouldBetValue <= 75)
             {
                 return GetTurn(root, CardValuationType.Risky);
             }
