@@ -56,7 +56,7 @@ namespace Nancy.Simple
         {
             var pair = handCards.Union(communityCards).GroupBy(card => RankValueByRank[card.Rank])
                 .SingleOrDefault(g => g.Count() == 2);
-            return pair?.Key ?? 0;
+            return pair != null ? pair.Key : 0;
         }
         
         private int TwoPairValue(Card[] handCards, Card[] communityCards)
